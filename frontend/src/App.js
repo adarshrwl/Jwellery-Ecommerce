@@ -3,6 +3,7 @@ import Signup from "./components/signup/Signup";
 import Login from "./components/login/login";
 import Navbar from "./common/navbar/navbar";
 import HomePage from "./components/homepage/homepage";
+import AdminAddProduct from "./components/admin/AdminAddProduct/AdminAddProduct";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/register" element={<Signup />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/admin-login" element={<AdminAddProduct />} />
       </Routes>
     </Router>
   );

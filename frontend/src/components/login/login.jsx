@@ -39,7 +39,9 @@ const LoginForm = () => {
 
       setSuccess("Login successful! Redirecting...");
       localStorage.setItem("token", res.data.token); // Store JWT token
-      setTimeout(() => navigate("/dashboard"), 2000); // Redirect after 2s
+      setTimeout(() => {
+        window.location.href = "/"; // ✅ Redirect to homepage and force reload
+      }, 2000); // Redirect after 2s
     } catch (err) {
       setError(err.response?.data?.msg || "Invalid credentials. Try again!");
     }

@@ -1,4 +1,8 @@
 /* Updated Navbar for Gemsera */
+.navbar {
+  z-index: 1030; /* Keep navbar above the rest */
+  position: relative;
+}
 
 /* Elegant Black Glass Effect */
 .navbar-glass {
@@ -56,6 +60,8 @@
 }
 
 .user-dropdown {
+  position: relative;
+  z-index: 1051;
   background-color: rgba(255, 204, 0, 0.8); /* Golden dropdown */
   color: #000000;
   border-radius: 8px;
@@ -63,7 +69,9 @@
 }
 
 .dropdown-menu {
-  background-color: rgba(0, 0, 0, 0.9); /* Black menu */
+  z-index: 1050 !important; /* High z-index to prevent overlap */
+  position: absolute !important;
+  background-color: rgba(0, 0, 0, 0.9); /* Ensure visibility */
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 

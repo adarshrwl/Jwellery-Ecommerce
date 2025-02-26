@@ -2,10 +2,10 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
-// Signup Controller
+// ✅ Signup Controller (Forces Role to Always Be "User")
 const signup = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password } = req.body; // 🚨 "role" is NOT accepted in the request
 
     let user = await User.findOne({ email });
     if (user) return res.status(400).json({ msg: "User already exists" });
@@ -13,32 +13,49 @@ const signup = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    user = new User({ name, email, password: hashedPassword });
-    await user.save();
-
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1d",
+    // ✅ Always forces role to "user"
+    user = new User({
+      name,
+      email,
+      password: hashedPassword,
+      role: "user",
     });
 
-    res.json({ token, user: { id: user._id, name, email } });
+    await user.save();
+
+    // ✅ Include role in JWT token
+    const token = jwt.sign(
+      { id: user._id, role: "user" }, // ✅ Explicitly set role in token
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    // ✅ Ensure role is included in response
+    res.json({
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: "user",
+      },
+    });
   } catch (err) {
-    res.status(500).json({ msg: "Server error" });
+    res.status(500).json({ msg: "Server error", error: err.message });
   }
 };
 
-// Login Controller
+// ✅ Login Controller (Includes Role in Response)
 const login = async (req, res) => {
   try {
     console.log("🔹 Received Request Body:", req.body);
 
     const { email, password } = req.body;
 
-    // Check if email and password are provided
     if (!email || !password) {
       return res.status(400).json({ msg: "Please provide email and password" });
     }
 
-    // Find user by email
     let user = await User.findOne({ email });
     if (!user) {
       console.log("❌ User not found");
@@ -47,7 +64,6 @@ const login = async (req, res) => {
 
     console.log("✅ User Found:", user);
 
-    // Compare password with hashed password
     const isMatch = await bcrypt.compare(password, user.password);
     console.log("🔍 Password Match:", isMatch);
 
@@ -56,26 +72,34 @@ const login = async (req, res) => {
       return res.status(400).json({ msg: "Invalid credentials" });
     }
 
-    // Generate JWT Token
     console.log("🔹 Generating JWT Token...");
     if (!process.env.JWT_SECRET) {
       throw new Error("JWT_SECRET is not defined in .env file");
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1d",
-    });
+    // ✅ Ensure role is included in the JWT token
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
 
     console.log("✅ Token Generated:", token);
 
-    // Send response
+    // ✅ Include role in the response
     res.json({
       token,
-      user: { id: user._id, name: user.name, email: user.email },
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role, // ✅ Now properly included in response
+      },
     });
   } catch (err) {
     console.error("❌ Login Error:", err.message);
     res.status(500).json({ msg: "Server error", error: err.message });
   }
 };
+
 module.exports = { signup, login };

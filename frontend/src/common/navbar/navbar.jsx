@@ -1,133 +1,128 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import "./Navbar.css"; // Import custom CSS
+import { jwtDecode } from "jwt-decode";
+import "./Navbar.css";
 
 const Navbar = () => {
-  const [userName, setUserName] = useState();
+  const [user, setUser] = useState(null);
 
-  // Retrieve user data from local storage
-  const user = JSON.parse(localStorage.getItem("username"));
+  // Check token on initial load and when it changes
+  useEffect(() => {
+    const checkUser = () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const decodedUser = jwtDecode(token);
+          setUser(decodedUser);
+        } catch (error) {
+          console.error("Invalid token", error);
+          localStorage.removeItem("token");
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
+    };
 
-  // Logout function to clear user data and redirect to login page
+    checkUser();
+
+    // Listen for localStorage changes (like login/logout)
+    window.addEventListener("storage", checkUser);
+
+    return () => {
+      window.removeEventListener("storage", checkUser);
+    };
+  }, []);
+
+  // Logout function
   const handleLogout = () => {
-    localStorage.clear();
+    localStorage.removeItem("token");
+    setUser(null);
     window.location.href = "/login";
   };
 
-  useEffect(() => {
-    setUserName(localStorage.getItem("userData"));
-  }, []);
-
   return (
-    <>
-      <nav className="navbar navbar-expand-lg navbar-glass">
-        <div className="container-fluid">
-          {/* Logo */}
-          <img
-            src="gemlogo.jpg"
-            alt="home"
-            width="70px"
-            className="navbar-logo"
-          />
+    <nav className="navbar navbar-expand-lg navbar-glass">
+      <div className="container-fluid">
+        <img
+          src="gemlogo.jpg"
+          alt="home"
+          width="70px"
+          className="navbar-logo"
+        />
 
-          {/* Toggler button for mobile view */}
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
+        <div className="collapse navbar-collapse">
+          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+            <li className="nav-item">
+              <Link className="nav-link" to="/">
+                Home
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/categories">
+                Categories
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/best-seller">
+                Best Seller
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/top-rated">
+                Top Rated
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/cart">
+                Cart
+              </Link>
+            </li>
+          </ul>
 
-          {/* Navbar links */}
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item">
-                <Link className="nav-link" to="/">
-                  Home
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/categories">
-                  Categories
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/best-seller">
-                  Best Seller
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/top-rated">
-                  Top Rated
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/cart">
-                  Cart
-                </Link>
-              </li>
-            </ul>
-
-            {/* User login/logout buttons */}
-            <form className="d-flex" role="search">
-              {userName ? (
-                <>
-                  {/* Dropdown menu for logged-in user */}
-                  <div className="dropdown">
-                    <button
-                      className="btn btn-secondary dropdown-toggle user-dropdown"
-                      type="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      Welcome, {userName}
+          <form className="d-flex">
+            {user ? (
+              <div className="dropdown">
+                <button
+                  className="btn btn-secondary dropdown-toggle user-dropdown"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                >
+                  Welcome, {user.name || "User"}
+                </button>
+                <ul className="dropdown-menu">
+                  <li>
+                    <Link className="dropdown-item" to="/profile">
+                      Profile
+                    </Link>
+                  </li>
+                  <li>
+                    <button onClick={handleLogout} className="dropdown-item">
+                      Logout
                     </button>
-                    <ul className="dropdown-menu">
-                      <li>
-                        <Link className="dropdown-item" to="/profile">
-                          Profile
-                        </Link>
-                      </li>
-                      <li>
-                        <button
-                          onClick={handleLogout}
-                          className="dropdown-item"
-                        >
-                          Logout
-                        </button>
-                      </li>
-                    </ul>
-                  </div>
-                </>
-              ) : (
-                <>
-                  {/* Register and login buttons for guests */}
-                  <Link
-                    to={"/register"}
-                    className="btn btn-outline-dark btn-highlight me-2"
-                    type="submit"
-                  >
-                    Register
-                  </Link>
-                  <Link
-                    to={"/login"}
-                    className="btn btn-outline-dark btn-highlight"
-                    type="submit"
-                  >
-                    Login
-                  </Link>
-                </>
-              )}
-            </form>
-          </div>
+                  </li>
+                </ul>
+              </div>
+            ) : (
+              <>
+                <Link
+                  to="/register"
+                  className="btn btn-outline-dark btn-highlight me-2"
+                >
+                  Register
+                </Link>
+                <Link
+                  to="/login"
+                  className="btn btn-outline-dark btn-highlight"
+                >
+                  Login
+                </Link>
+              </>
+            )}
+          </form>
         </div>
-      </nav>
-    </>
+      </div>
+    </nav>
   );
 };
 

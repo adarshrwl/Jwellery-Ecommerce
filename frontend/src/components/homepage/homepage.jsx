@@ -3,7 +3,6 @@ import { Button, Card, Container, Row, Col } from "react-bootstrap";
 import { motion } from "framer-motion";
 import "./HomePage.css";
 
-
 const HomePage = () => {
   return (
     <div className="bg-light text-dark">
@@ -23,7 +22,7 @@ const HomePage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
         >
-          Discover the Elegance of Handmade Earrings
+          Discover Stunning Earrings for Every Occasion
         </motion.h1>
         <motion.p
           className="lead mb-4 text-shadow"
@@ -31,7 +30,8 @@ const HomePage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3 }}
         >
-          Elevate your style with our unique, handcrafted collection.
+          Explore our exclusive collection of elegant, trendy, and timeless
+          designs.
         </motion.p>
         <motion.div
           initial={{ opacity: 0 }}
@@ -48,20 +48,45 @@ const HomePage = () => {
       <Container className="py-5">
         <h2 className="text-center mb-4 fw-bold">Featured Earrings</h2>
         <Row className="g-4">
-          {[1, 2, 3, 4].map((item) => (
-            <Col key={item} xs={12} sm={6} md={4} lg={3}>
+          {[
+            {
+              id: 1,
+              name: "Gold Hoop Earrings",
+              price: "$49.99",
+              image: "/earring-1.jpg",
+            },
+            {
+              id: 2,
+              name: "Diamond Stud Earrings",
+              price: "$79.99",
+              image: "/earring-2.jpg",
+            },
+            {
+              id: 3,
+              name: "Silver Drop Earrings",
+              price: "$59.99",
+              image: "/earring-3.jpg",
+            },
+            {
+              id: 4,
+              name: "Luxury Pearl Earrings",
+              price: "$89.99",
+              image: "/earring-4.jpg",
+            },
+          ].map((earring) => (
+            <Col key={earring.id} xs={12} sm={6} md={4} lg={3}>
               <Card className="shadow-sm border-0">
                 <Card.Img
                   variant="top"
-                  src={`/earring-${item}.jpg`}
-                  alt={`Earring ${item}`}
+                  src={earring.image}
+                  alt={earring.name}
                   style={{ height: "250px", objectFit: "cover" }}
                 />
                 <Card.Body className="text-center">
                   <Card.Title className="fw-semibold">
-                    Elegant Gold Hoop
+                    {earring.name}
                   </Card.Title>
-                  <Card.Text className="text-muted">$49.99</Card.Text>
+                  <Card.Text className="text-muted">{earring.price}</Card.Text>
                   <Button variant="dark" className="rounded-pill w-100">
                     Add to Cart
                   </Button>
