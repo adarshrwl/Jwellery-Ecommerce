@@ -1,0 +1,70 @@
+.admin-product-page {
+  padding: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.product-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+
+.admin-product-form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.admin-product-form input,
+.admin-product-form textarea,
+.admin-product-form select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.admin-product-form button {
+  padding: 10px 20px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.image-preview {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  margin-top: 10px;
+}
+
+.error {
+  color: red;
+}
+
+.btn-warning {
+  background-color: #ffc107;
+  color: #000;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: #fff;
+}
+.message {
+  color: green;
+  font-weight: bold;
+  margin-bottom: 10px;
+}

@@ -4,6 +4,7 @@ import Login from "./components/login/login";
 import Navbar from "./common/navbar/navbar";
 import HomePage from "./components/homepage/homepage";
 import AdminAddProduct from "./components/admin/AdminAddProduct/AdminAddProduct";
+import AdminProductPage from "./components/admin/AdminViewAllProduts/AdminProductPage";
 
 function App() {
   return (
@@ -14,7 +15,8 @@ function App() {
         <Route path="/register" element={<Signup />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/admin-login" element={<AdminAddProduct />} />
+        <Route path="/adminAddProduct" element={<AdminAddProduct />} />
+        <Route path="/editProduct" element={<AdminProductPage />} />
       </Routes>
     </Router>
   );

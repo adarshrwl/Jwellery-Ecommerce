@@ -12,6 +12,8 @@ connectDB();
 // Middleware
 app.use(express.json());
 app.use(cors());
+// Serve static files from the "uploads" directory
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // ✅ Serve images from "uploads" folder
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));

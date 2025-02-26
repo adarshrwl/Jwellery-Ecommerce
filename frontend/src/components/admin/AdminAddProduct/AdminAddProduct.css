@@ -1,37 +1,87 @@
 .admin-product-form {
-    max-width: 500px;
-    margin: 40px auto;
-    padding: 20px;
-    background: #fff;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-  }
-  
-  .admin-product-form h2 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .admin-product-form input,
-  .admin-product-form textarea {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .admin-product-form button {
-    width: 100%;
-    padding: 10px;
-    background: #000;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .admin-product-form button:hover {
-    background: #333;
-  }
-  
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.admin-product-form h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.product-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-group label {
+  font-weight: bold;
+  color: #555;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.image-preview {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.image-preview img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #ddd;
+}
+
+.submit-button {
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+  background-color: #0056b3;
+}
+
+.success-message {
+  color: green;
+  text-align: center;
+  font-weight: bold;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  font-weight: bold;
+}

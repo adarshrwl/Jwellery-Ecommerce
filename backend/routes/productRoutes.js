@@ -2,6 +2,7 @@ const express = require("express");
 const {
   addProduct,
   getProducts,
+  getProductById, // ✅ Added missing function
   deleteProduct,
   updateProduct,
 } = require("../controller/productController");
@@ -15,7 +16,10 @@ const router = express.Router();
 router.post("/", protect, adminOnly, upload.single("image"), addProduct);
 
 // ✅ Admin: Get all products
-router.get("/", protect, adminOnly, getProducts);
+router.get("/", getProducts);
+
+// ✅ Admin: Get product by ID (Fix missing GET route)
+router.get("/:id", getProductById); // ✅ This was missing
 
 // ✅ Admin: Delete a product
 router.delete("/:id", protect, adminOnly, deleteProduct);
