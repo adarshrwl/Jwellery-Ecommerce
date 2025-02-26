@@ -1,26 +1,32 @@
 const jwt = require("jsonwebtoken");
+const User = require("../models/user");
 
-// Middleware to protect routes by verifying token
-const protect = (req, res, next) => {
-  const token = req.header("x-auth-token");
-  if (!token) {
-    return res.status(401).json({ msg: "No token, authorization denied" });
-  }
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch (err) {
-    res.status(401).json({ msg: "Invalid token" });
+const protect = async (req, res, next) => {
+  let token;
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    try {
+      token = req.headers.authorization.split(" ")[1]; // Extract the token
+      const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify token
+
+      req.user = await User.findById(decoded.id).select("-password"); // Attach user data
+      next();
+    } catch (error) {
+      res.status(401).json({ msg: "Token is invalid" });
+    }
+  } else {
+    res.status(401).json({ msg: "No token, authorization denied" });
   }
 };
-
-// Middleware to allow only admins to access a route
 const adminOnly = (req, res, next) => {
-  if (req.user && req.user.isAdmin) {
+  if (req.user && req.user.role === "admin") {
     next();
   } else {
-    res.status(403).json({ msg: "Access denied: Admins only" });
+    console.log("User Role:", req.user?.role); // Log the user role
+    res.status(403).json({ message: "Not authorized as admin" });
   }
 };
 
