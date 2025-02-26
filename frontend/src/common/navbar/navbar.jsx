@@ -78,6 +78,22 @@ const Navbar = () => {
                 Cart
               </Link>
             </li>
+
+            {/* Show "All Products" and "Edit Products" for admin */}
+            {user && user.role === "admin" && (
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/adminAddProduct">
+                    Add Product
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/editProduct">
+                    Edit Products
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
 
           <form className="d-flex">
