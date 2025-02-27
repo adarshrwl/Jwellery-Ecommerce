@@ -1,9 +1,41 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Card, Container, Row, Col } from "react-bootstrap";
 import { motion } from "framer-motion";
 import "./HomePage.css";
 
 const HomePage = () => {
+  const [featuredEarrings, setFeaturedEarrings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch data from the backend
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/products"); // Replace with your backend API endpoint
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const data = await response.json();
+        setFeaturedEarrings(data); // Set the fetched data to state
+      } catch (error) {
+        setError(error.message); // Handle errors
+      } finally {
+        setLoading(false); // Set loading to false after fetching
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return <div className="text-center py-5">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center py-5 text-danger">Error: {error}</div>;
+  }
+
   return (
     <div className="bg-light text-dark">
       {/* Hero Section */}
@@ -48,37 +80,12 @@ const HomePage = () => {
       <Container className="py-5">
         <h2 className="text-center mb-4 fw-bold">Featured Earrings</h2>
         <Row className="g-4">
-          {[
-            {
-              id: 1,
-              name: "Gold Hoop Earrings",
-              price: "$49.99",
-              image: "/earring-1.jpg",
-            },
-            {
-              id: 2,
-              name: "Diamond Stud Earrings",
-              price: "$79.99",
-              image: "/earring-2.jpg",
-            },
-            {
-              id: 3,
-              name: "Silver Drop Earrings",
-              price: "$59.99",
-              image: "/earring-3.jpg",
-            },
-            {
-              id: 4,
-              name: "Luxury Pearl Earrings",
-              price: "$89.99",
-              image: "/earring-4.jpg",
-            },
-          ].map((earring) => (
-            <Col key={earring.id} xs={12} sm={6} md={4} lg={3}>
+          {featuredEarrings.map((earring) => (
+            <Col key={earring._id} xs={12} sm={6} md={4} lg={3}>
               <Card className="shadow-sm border-0">
                 <Card.Img
                   variant="top"
-                  src={earring.image}
+                  src={`http://localhost:5000${earring.image}`} // Prepend backend URL to image path
                   alt={earring.name}
                   style={{ height: "250px", objectFit: "cover" }}
                 />
@@ -86,7 +93,7 @@ const HomePage = () => {
                   <Card.Title className="fw-semibold">
                     {earring.name}
                   </Card.Title>
-                  <Card.Text className="text-muted">{earring.price}</Card.Text>
+                  <Card.Text className="text-muted">${earring.price}</Card.Text>
                   <Button variant="dark" className="rounded-pill w-100">
                     Add to Cart
                   </Button>
