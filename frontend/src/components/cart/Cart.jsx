@@ -15,42 +15,37 @@ import axios from "axios";
 import "./cart.css";
 
 const SideBar = ({ cart }) => {
-  // Calculate cart total
   const subtotal = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
   const shippingFee = 209;
-  const tax = Math.round(subtotal * 0.1); // 10% tax
-  const total = subtotal + shippingFee + tax;
+  const total = subtotal + shippingFee;
 
   return (
-    <Card className="ezy__epcart4-card sticky-top">
-      <Card.Body className="p-md-4">
-        <h6 className="mb-4 opacity-75">Order Summary</h6>
-        <div className="d-flex justify-content-between align-items-center">
-          <span>Sub total</span>
-          <span className="fw-bold">${subtotal.toFixed(2)}</span>
+    <Card className="ezy__epcart4-card sticky-top shadow-lg">
+      <Card.Body className="p-4">
+        <h5 className="mb-4 text-center fw-bold text-white">Order Summary</h5>
+        <div className="d-flex justify-content-between align-items-center mb-3 text-light">
+          <span>Subtotal</span>
+          <span className="fw-bold">Rs. {subtotal.toFixed(2)}</span>
         </div>
         <hr className="ezy__epcart4-hr" />
-        <div className="d-flex justify-content-between align-items-center">
+        <div className="d-flex justify-content-between align-items-center mb-3 text-light">
           <span>Shipping Fee</span>
-          <span className="fw-bold">${shippingFee}</span>
+          <span className="fw-bold">Rs. {shippingFee}</span>
         </div>
         <hr className="ezy__epcart4-hr" />
-        <div className="d-flex justify-content-between align-items-center">
-          <span>Tax</span>
-          <span className="fw-bold">${tax}</span>
-        </div>
-        <hr className="ezy__epcart4-hr" />
-        <div className="d-flex justify-content-between align-items-center">
-          <span className="fs-5 fw-bold">Total</span>
-          <span className="fw-bold">${total.toFixed(2)}</span>
+        <div className="d-flex justify-content-between align-items-center text-light">
+          <span className="fs-4 fw-bold">Total</span>
+          <span className="fw-bold fs-3 text-warning">
+            Rs. {total.toFixed(2)}
+          </span>
         </div>
       </Card.Body>
-      <Card.Body className="px-md-4 pb-md-4">
-        <Button variant="" className="ezy__epcart4-btn w-100">
-          BUY ({cart.length})
+      <Card.Body className="p-4 pt-0">
+        <Button className="ezy__epcart4-btn w-100 rounded-pill shadow-sm">
+          Buy Now ({cart.length})
         </Button>
       </Card.Body>
     </Card>
@@ -63,26 +58,35 @@ const QtyField = ({ name, value, onChange }) => {
       target: {
         name,
         type: "radio",
-        value: qty < 1 ? 1 : qty, // Ensure quantity doesn't go below 1
+        value: qty < 1 ? 1 : qty,
       },
     });
 
   return (
-    <InputGroup className="ezy__epcart4-qty mb-3">
+    <div className="d-flex align-items-center ezy__epcart4-qty">
+      <Button
+        variant=""
+        type="button"
+        onClick={() => qtyControl(value - 1)}
+        className="qty-btn px-2"
+      >
+        −
+      </Button>
       <Form.Control
         type="number"
         value={value}
         onChange={(e) => qtyControl(Number(e.target.value))}
+        className="text-center qty-input mx-1"
       />
-      <InputGroup.Text className="d-flex flex-column bg-transparent p-0">
-        <Button variant="" type="button" onClick={() => qtyControl(value + 1)}>
-          +
-        </Button>
-        <Button variant="" type="button" onClick={() => qtyControl(value - 1)}>
-          -
-        </Button>
-      </InputGroup.Text>
-    </InputGroup>
+      <Button
+        variant=""
+        type="button"
+        onClick={() => qtyControl(value + 1)}
+        className="qty-btn px-2"
+      >
+        +
+      </Button>
+    </div>
   );
 };
 
@@ -93,46 +97,49 @@ QtyField.propTypes = {
 };
 
 const ProductItem = ({ item, index, onChange, removeItem }) => {
-  // Construct the full image URL
-  const baseUrl = "http://localhost:5000"; // Adjust if your backend runs on a different port or domain
+  const baseUrl = "http://localhost:5000";
   const imageUrl = item.image.startsWith("http")
     ? item.image
     : `${baseUrl}${item.image}`;
 
   return (
-    <Card.Body className="d-flex align-items-start p-md-4">
-      <div className="ezy__epcart4-image me-3 me-md-4">
+    <Card.Body className="d-flex align-items-center p-4 border-bottom border-dark">
+      <div className="ezy__epcart4-image me-4">
         <img
           src={imageUrl}
           alt={item.name}
-          className="img-fluid"
-          style={{ maxWidth: "100px", height: "auto" }} // Adjust size for clarity
+          className="img-fluid rounded shadow-sm"
+          style={{ maxWidth: "130px", height: "auto" }}
           onError={(e) => {
             e.target.src =
-              "https://via.placeholder.com/100?text=Image+Not+Found"; // Fallback image
+              "https://via.placeholder.com/130?text=Image+Not+Found";
           }}
         />
       </div>
-      <div>
-        <div className="ezy__epcart4-heading mb-3">
-          <a href="#!">{item.name}</a>
+      <div className="flex-grow-1 text-light">
+        <div className="ezy__epcart4-heading mb-2">
+          <a href="#!" className="fs-5 fw-medium text-white">
+            {item.name}
+          </a>
         </div>
-        <div>
+        <div className="d-flex align-items-center">
+          <h3 className="ezy__epcart4-price mb-0 fw-bold text-warning me-2">
+            Rs. {item.price}
+          </h3>
           <QtyField
             name={`ezy__epcart4-qty-${index}`}
             value={item.quantity}
             onChange={(e) => onChange(e, index)}
           />
-          <h3 className="ezy__epcart4-price mb-0">Rs. {item.price}</h3>
         </div>
       </div>
-      <div>
+      <div className="ms-3">
         <Button
           variant=""
-          className="ezy__epcart4-del d-inline-flex justify-content-center align-items-center rounded-circle p-0"
+          className="ezy__epcart4-del rounded-circle p-2 shadow-sm"
           onClick={() => removeItem(item.product)}
         >
-          <FontAwesomeIcon icon={faTimes} className="fs-6" />
+          <FontAwesomeIcon icon={faTimes} className="fs-5 text-danger" />
         </Button>
       </div>
     </Card.Body>
@@ -151,7 +158,6 @@ const Cart = () => {
   const [loading, setLoading] = useState(true);
   const token = localStorage.getItem("token");
 
-  // Fetch cart items from backend
   useEffect(() => {
     const fetchCart = async () => {
       if (!token) {
@@ -163,7 +169,7 @@ const Cart = () => {
         const { data } = await axios.get("http://localhost:5000/api/cart", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setCart(data.items || []); // Ensure items is an array
+        setCart(data.items || []);
       } catch (error) {
         console.error(
           "Error fetching cart:",
@@ -176,7 +182,6 @@ const Cart = () => {
     fetchCart();
   }, [token]);
 
-  // Handle quantity change
   const onChange = async (e, index) => {
     const { value } = e.target;
     const updatedCart = [...cart];
@@ -200,7 +205,6 @@ const Cart = () => {
     }
   };
 
-  // Remove item from cart
   const removeItem = async (productId) => {
     try {
       await axios.delete(`http://localhost:5000/api/cart/${productId}`, {
@@ -216,19 +220,21 @@ const Cart = () => {
   };
 
   return (
-    <section className="ezy__epcart4 dark-gray" id="ezy__epcart4">
+    <section className="ezy__epcart4 dark-gray py-5">
       <Container>
+        <h2 className="text-center mb-5 fw-bold text-white animate__fadeIn">
+          Your Cart
+        </h2>
         {loading ? (
-          <p>Loading cart...</p>
+          <p className="text-center text-muted">Loading cart...</p>
         ) : cart.length === 0 ? (
-          <p>Your cart is empty.</p>
+          <p className="text-center text-muted fs-4">Your cart is empty.</p>
         ) : (
           <Row>
             <Col lg={8}>
-              <Card className="ezy__epcart4-card mb-3">
+              <Card className="ezy__epcart4-card mb-4 shadow-lg">
                 {cart.map((item, i) => (
                   <Fragment key={i}>
-                    {!!i && <hr className="ezy__epcart4-hr my-0" />}
                     <ProductItem
                       item={item}
                       index={i}

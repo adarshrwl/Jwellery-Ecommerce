@@ -1,189 +1,153 @@
 .ezy__epcart4 {
-  /* Bootstrap variables */
-  --bs-body-color: #23262f;
-  --bs-body-bg: rgb(255, 255, 255);
-
-  /* Easy Frontend variables */
-  --ezy-theme-color: rgb(13, 110, 253);
+  --bs-body-color: #ffffff;
+  --bs-body-bg: #1e2735;
+  --ezy-theme-color: #0d6efd;
   --ezy-theme-color-rgb: 13, 110, 253;
-  --ezy-secondary-color-rgb: 0, 0, 0;
+  --ezy-secondary-color-rgb: 255, 255, 255;
   --ezy-button-color: #fff;
-  --ezy-card-bg: #f5f7fd;
+  --ezy-card-bg: #0b1727;
 
-  background-color: var(--bs-body-bg);
+  background: linear-gradient(135deg, #1e2735 0%, #2c3e50 100%);
   color: var(--bs-body-color);
-  overflow: hidden;
-  padding: 60px 0;
-  position: relative;
+  padding: 0;
+  min-height: 100vh;
 }
 
-@media (min-width: 768px) {
-  .ezy__epcart4 {
-    padding: 100px 0;
-  }
-}
-
-/* Gray Block Style */
-.gray .ezy__epcart4,
-.ezy__epcart4.gray {
-  /* Bootstrap variables */
-  --bs-body-bg: rgb(246, 246, 246);
-
-  /* Easy Frontend variables */
-  --ezy-secondary-color-rgb: 0, 0, 0;
-  --ezy-card-bg: rgb(255, 255, 255);
-}
-
-/* Dark Gray Block Style */
-.dark-gray .ezy__epcart4,
-.ezy__epcart4.dark-gray {
-  /* Bootstrap variables */
+.dark-gray .ezy__epcart4 {
+  --bs-body-bg: #1e2735;
   --bs-body-color: #ffffff;
-  --bs-body-bg: rgb(30, 39, 53);
-
-  /* Easy Frontend variables */
-  --ezy-secondary-color-rgb: 255, 255, 255;
-  --ezy-card-bg: rgb(11, 23, 39);
-}
-
-/* Dark Block Style */
-.dark .ezy__epcart4,
-.ezy__epcart4.dark {
-  /* Bootstrap variables */
-  --bs-body-color: #ffffff;
-  --bs-body-bg: rgb(11, 23, 39);
-
-  /* Easy Frontend variables */
-  --ezy-secondary-color-rgb: 255, 255, 255;
-  --ezy-card-bg: rgb(30, 39, 53);
+  --ezy-card-bg: #0b1727;
 }
 
 .ezy__epcart4-heading a {
-  font-size: 16px;
-  line-height: 18px;
+  font-size: 20px;
   color: var(--bs-body-color);
   text-decoration: none;
+  transition: color 0.3s ease;
 }
 
 .ezy__epcart4-heading a:hover {
-  color: rgb(var(--ezy-theme-color-rgb));
-}
-
-@media (min-width: 768px) {
-  .ezy__epcart4-heading a {
-    font-size: 17px;
-    line-height: 19px;
-  }
+  color: #ffd700;
 }
 
 .ezy__epcart4-price {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: bold;
-  color: rgb(var(--ezy-theme-color-rgb));
+  color: #ffd700;
 }
 
-.ezy__epcart4-title {
-  font-size: 15px;
-  color: var(--bs-body-color);
+.ezy__epcart4-image img {
+  border-radius: 10px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
 }
 
-.ezy__epcart4-image {
-  min-width: 50px;
-  width: 50px;
-  height: auto;
-  background-color: rgb(var(--ezy-secondary-color-rgb), 0.05);
-  border: 1px solid rgba(var(--ezy-secondary-color-rgb), 0.05);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-@media (min-width: 768px) {
-  .ezy__epcart4-image {
-    min-width: 120px;
-    width: 120px;
-  }
+.ezy__epcart4-image img:hover {
+  transform: scale(1.05);
 }
 
 .ezy__epcart4-qty {
-  width: 95px;
+  height: 40px;
 }
 
-.ezy__epcart4-qty .btn {
-  font-size: 13px;
+.ezy__epcart4-qty .qty-btn {
+  font-size: 16px;
   font-weight: bold;
-  color: rgb(var(--ezy-theme-color-rgb));
-  background-color: transparent;
-  padding: 0;
-  border-radius: 0 !important;
-  border: none;
-  width: 30px;
-  height: 50%;
+  color: #0d6efd;
+  background-color: #212529;
+  border: 1px solid #495057;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.ezy__epcart4-qty .btn:hover {
-  background-color: rgb(var(--ezy-theme-color-rgb));
-  color: var(--ezy-button-color);
+.ezy__epcart4-qty .qty-btn:hover {
+  background-color: #0d6efd;
+  color: #fff;
 }
 
-.ezy__epcart4-qty .form-control {
+.ezy__epcart4-qty .qty-input {
   font-size: 18px;
   font-weight: bold;
   text-align: center;
-  color: var(--bs-body-color);
+  color: #fff;
+  border: 1px solid #495057;
+  background-color: #212529;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-left: none;
+  border-right: none;
+  transition: border-color 0.3s ease;
 }
 
-.ezy__epcart4-qty .input-group-text,
-.ezy__epcart4-qty .form-control {
-  border-color: rgb(var(--ezy-secondary-color-rgb), 0.7);
-  background-color: transparent;
-  height: 40px;
-  border-radius: 8px !important;
-  overflow: hidden;
+.ezy__epcart4-qty .qty-input:focus {
+  border-color: #0d6efd;
+  box-shadow: none;
 }
 
 .ezy__epcart4-btn {
-  font-size: 14px;
-  border-color: rgb(var(--ezy-theme-color-rgb));
-  background-color: rgb(var(--ezy-theme-color-rgb));
-  color: var(--ezy-button-color);
-  height: 42px;
-  min-width: 42px;
+  font-size: 16px;
+  font-weight: bold;
+  background: linear-gradient(90deg, #0d6efd, #00b4d8);
+  color: #fff;
+  height: 50px;
+  border: none;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 .ezy__epcart4-btn:hover {
-  background-color: rgba(var(--ezy-theme-color-rgb), 0.9);
-  border-color: rgba(var(--ezy-theme-color-rgb), 0.9);
-  color: var(--ezy-button-color);
+  transform: translateY(-2px);
+  opacity: 0.9;
+  color: #fff;
 }
 
 .ezy__epcart4-del {
-  color: rgb(var(--bs-body-color)) !important;
-  background-color: transparent;
+  color: #dc3545;
+  background-color: rgba(255, 255, 255, 0.1);
   border: none;
-  height: 35px;
-  width: 35px;
+  height: 40px;
+  width: 40px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .ezy__epcart4-del:hover {
-  border: none;
-  background-color: rgba(var(--ezy-theme-color-rgb), 0.1);
+  background-color: rgba(220, 53, 69, 0.3);
+  transform: scale(1.1);
 }
 
 .ezy__epcart4-card {
   background-color: var(--ezy-card-bg);
   border: none;
-  border-radius: 10px;
+  border-radius: 15px;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.ezy__epcart4-card:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .ezy__epcart4-hr {
-  background-color: rgb(var(--ezy-secondary-color-rgb), 0.05);
+  background-color: rgba(255, 255, 255, 0.1);
   opacity: 1;
 }
 
-.ezy__epcart4-content {
-  color: var(--bs-body-color);
-  opacity: 0.7;
+.animate__fadeIn {
+  animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

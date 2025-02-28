@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./AdminAddProduct.css"; // Ensure this CSS file is updated with the styles below
+import "./AdminAddProduct.css"; // Ensure this CSS file is updated below
 
 const AdminAddProduct = () => {
   const navigate = useNavigate();
@@ -82,114 +82,107 @@ const AdminAddProduct = () => {
   };
 
   return (
-    <div className="admin-product-form">
-      <h2>Add New Product</h2>
-      {message && (
-        <p
-          className={
-            message.includes("✅") ? "success-message" : "error-message"
-          }
-        >
-          {message}
-        </p>
-      )}
-
-      <form onSubmit={handleSubmit} className="product-form">
-        <div className="form-group">
-          <label htmlFor="name">Product Name</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            placeholder="Enter product name"
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="description">Description</label>
-          <textarea
-            id="description"
-            name="description"
-            placeholder="Enter product description"
-            onChange={handleChange}
-            required
-          ></textarea>
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="price">Price</label>
-          <input
-            type="number"
-            id="price"
-            name="price"
-            placeholder="Enter price"
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="category">Category</label>
-          <select
-            id="category"
-            name="category"
-            onChange={handleChange}
-            required
+    <div className="admin-product-container">
+      <div className="admin-product-form animate__fadeIn">
+        <h2>Add New Product</h2>
+        {message && (
+          <p
+            className={
+              message.includes("✅") ? "success-message" : "error-message"
+            }
           >
-            {CATEGORIES.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="stock">Stock Quantity</label>
-          <input
-            type="number"
-            id="stock"
-            name="stock"
-            placeholder="Enter stock quantity"
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="image">Product Image</label>
-          <input
-            type="file"
-            id="image"
-            accept="image/*"
-            onChange={handleFileChange}
-            required
-          />
-        </div>
-
-        {/* Image Preview */}
-        {imagePreview && (
-          <div className="image-preview">
-            <p>Image Preview:</p>
-            <img
-              src={imagePreview}
-              alt="Preview"
-              style={{
-                width: "150px",
-                height: "150px",
-                objectFit: "cover",
-                borderRadius: "8px",
-              }}
-            />
-          </div>
+            {message}
+          </p>
         )}
 
-        <button type="submit" className="submit-button">
-          Add Product
-        </button>
-      </form>
+        <form onSubmit={handleSubmit} className="product-form">
+          <div className="form-group">
+            <label htmlFor="name">Product Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Enter product name"
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="description">Description</label>
+            <textarea
+              id="description"
+              name="description"
+              placeholder="Enter product description"
+              onChange={handleChange}
+              required
+            ></textarea>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="price">Price (Rs.)</label>
+            <input
+              type="number"
+              id="price"
+              name="price"
+              placeholder="Enter price in Rs."
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="category">Category</label>
+            <select
+              id="category"
+              name="category"
+              onChange={handleChange}
+              required
+            >
+              {CATEGORIES.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="stock">Stock Quantity</label>
+            <input
+              type="number"
+              id="stock"
+              name="stock"
+              placeholder="Enter stock quantity"
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="image">Product Image</label>
+            <input
+              type="file"
+              id="image"
+              accept="image/*"
+              onChange={handleFileChange}
+              required
+            />
+          </div>
+
+          {/* Image Preview */}
+          {imagePreview && (
+            <div className="image-preview animate__fadeIn">
+              <p>Image Preview:</p>
+              <img src={imagePreview} alt="Preview" className="preview-image" />
+            </div>
+          )}
+
+          <button type="submit" className="submit-button animate__fadeIn">
+            Add Product
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

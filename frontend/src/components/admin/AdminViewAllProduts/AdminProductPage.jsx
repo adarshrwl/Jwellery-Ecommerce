@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./AdminProductPage.css";
+import "./AdminProductPage.css"; // Ensure this CSS file is updated below
 
 const AdminProductPage = () => {
   const [products, setProducts] = useState([]);
@@ -35,7 +35,7 @@ const AdminProductPage = () => {
     } else {
       fetchProducts();
     }
-  }, [navigate, token, fetchProducts]); // Added fetchProducts to dependency array
+  }, [navigate, token, fetchProducts]);
 
   const handleEdit = (id) => {
     setEditProductId(id);
@@ -49,6 +49,7 @@ const AdminProductPage = () => {
         });
         setMessage("✅ Product deleted successfully!");
         fetchProducts(); // Refresh the product list
+        setTimeout(() => setMessage(""), 3000); // Clear message after 3 seconds
       } catch (error) {
         setMessage("❌ Error deleting product: " + error.message);
       }
@@ -56,7 +57,7 @@ const AdminProductPage = () => {
   };
 
   return (
-    <div className="admin-product-page">
+    <div className="admin-product-container">
       {editProductId ? (
         <AdminEditProduct
           productId={editProductId}
@@ -65,17 +66,17 @@ const AdminProductPage = () => {
           categories={CATEGORIES}
         />
       ) : (
-        <>
+        <div className="admin-product-list animate__fadeIn">
           <h2>Manage Products</h2>
-          {loading && <p>Loading products...</p>}
-          {error && <p className="error">{error}</p>}
-          {message && <p className="message">{message}</p>}
-          <table className="table">
+          {loading && <p className="loading-text">Loading products...</p>}
+          {error && <p className="error-message">{error}</p>}
+          {message && <p className="success-message">{message}</p>}
+          <table className="product-table">
             <thead>
               <tr>
                 <th>Image</th>
                 <th>Name</th>
-                <th>Price</th>
+                <th>Price (Rs.)</th>
                 <th>Category</th>
                 <th>Stock</th>
                 <th>Actions</th>
@@ -86,24 +87,24 @@ const AdminProductPage = () => {
                 <tr key={product._id}>
                   <td>
                     <img
-                      src={`http://localhost:5000${product.image}`} // Add backend URL
+                      src={`http://localhost:5000${product.image}`}
                       alt={product.name}
                       className="product-image"
                     />
                   </td>
                   <td>{product.name}</td>
-                  <td>${product.price}</td>
+                  <td>Rs. {product.price}</td>
                   <td>{product.category}</td>
                   <td>{product.stock}</td>
                   <td>
                     <button
-                      className="btn btn-warning"
+                      className="btn-edit"
                       onClick={() => handleEdit(product._id)}
                     >
                       Edit
                     </button>
                     <button
-                      className="btn btn-danger"
+                      className="btn-delete"
                       onClick={() => handleDelete(product._id)}
                     >
                       Delete
@@ -113,7 +114,7 @@ const AdminProductPage = () => {
               ))}
             </tbody>
           </table>
-        </>
+        </div>
       )}
     </div>
   );
@@ -155,7 +156,7 @@ const AdminEditProduct = ({
     if (productId) {
       fetchProduct();
     }
-  }, [productId, fetchProduct]); // Added fetchProduct to dependency array
+  }, [productId, fetchProduct]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -190,6 +191,7 @@ const AdminEditProduct = ({
       );
       setMessage("✅ Product updated successfully!");
       fetchProducts(); // Refresh the product list
+      setTimeout(() => setMessage(""), 3000); // Clear message after 3 seconds
       setEditProductId(null); // Close the edit form
     } catch (error) {
       setMessage("❌ Error updating product: " + error.message);
@@ -197,69 +199,116 @@ const AdminEditProduct = ({
   };
 
   return (
-    <div className="admin-product-form">
+    <div className="admin-product-form animate__fadeIn">
       <h2>Edit Product</h2>
-      {message && <p>{message}</p>}
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Product Name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
-        <textarea
-          name="description"
-          placeholder="Description"
-          value={formData.description}
-          onChange={handleChange}
-          required
-        ></textarea>
-        <input
-          type="number"
-          name="price"
-          placeholder="Price"
-          value={formData.price}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="number"
-          name="stock"
-          placeholder="Stock Quantity"
-          value={formData.stock}
-          onChange={handleChange}
-          required
-        />
-        <select
-          name="category"
-          value={formData.category}
-          onChange={handleChange}
-          required
+      {message && (
+        <p
+          className={
+            message.includes("✅") ? "success-message" : "error-message"
+          }
         >
-          {categories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
-          ))}
-        </select>
-        <input type="file" accept="image/*" onChange={handleFileChange} />
-        {imagePreview && (
-          <img
-            src={
-              imagePreview.startsWith("blob:")
-                ? imagePreview
-                : `http://localhost:5000${imagePreview}`
-            }
-            alt="Preview"
-            className="image-preview"
+          {message}
+        </p>
+      )}
+      <form onSubmit={handleSubmit} className="product-form">
+        <div className="form-group">
+          <label htmlFor="name">Product Name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Product Name"
+            value={formData.name}
+            onChange={handleChange}
+            required
           />
+        </div>
+        <div className="form-group">
+          <label htmlFor="description">Description</label>
+          <textarea
+            id="description"
+            name="description"
+            placeholder="Description"
+            value={formData.description}
+            onChange={handleChange}
+            required
+          ></textarea>
+        </div>
+        <div className="form-group">
+          <label htmlFor="price">Price (Rs.)</label>
+          <input
+            type="number"
+            id="price"
+            name="price"
+            placeholder="Price in Rs."
+            value={formData.price}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="stock">Stock Quantity</label>
+          <input
+            type="number"
+            id="stock"
+            name="stock"
+            placeholder="Stock Quantity"
+            value={formData.stock}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="category">Category</label>
+          <select
+            id="category"
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+            required
+          >
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="form-group">
+          <label htmlFor="image">Product Image</label>
+          <input
+            type="file"
+            id="image"
+            accept="image/*"
+            onChange={handleFileChange}
+          />
+        </div>
+        {imagePreview && (
+          <div className="image-preview animate__fadeIn">
+            <p>Image Preview:</p>
+            <img
+              src={
+                imagePreview.startsWith("blob:")
+                  ? imagePreview
+                  : `http://localhost:5000${imagePreview}`
+              }
+              alt="Preview"
+              className="preview-image"
+            />
+          </div>
         )}
-        <button type="submit">Update Product</button>
-        <button type="button" onClick={() => setEditProductId(null)}>
-          Cancel
-        </button>
+        <div className="button-group">
+          <button type="submit" className="submit-button animate__fadeIn">
+            Update Product
+          </button>
+          <button
+            type="button"
+            onClick={() => setEditProductId(null)}
+            className="cancel-button animate__fadeIn"
+          >
+            Cancel
+          </button>
+        </div>
       </form>
     </div>
   );
