@@ -15,19 +15,25 @@ app.use(cors());
 // Serve static files from the "uploads" directory
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// ✅ Serve images from "uploads" folder
+// Serve static files
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// ✅ Routes
-app.use("/api/auth", require("./routes/authRoutes"));
-app.use("/api/products", require("./routes/productRoutes"));
+// Import Routes
+const authRoutes = require("./routes/authRoutes");
+const productRoutes = require("./routes/productRoutes");
+const cartRoutes = require("./routes/cartRoutes"); // Ensure this is imported
 
-// ✅ Default Route
+// Use Routes
+app.use("/api/auth", authRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/cart", cartRoutes); // Ensure this is present
+
+// Default Route
 app.get("/", (req, res) => {
   res.send("Welcome to Gemsera Backend!");
 });
 
-// ✅ Error Handling Middleware
+// Error Handling Middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res
@@ -35,6 +41,6 @@ app.use((err, req, res, next) => {
     .json({ message: "Something went wrong!", error: err.message });
 });
 
-// ✅ Start Server
+// Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

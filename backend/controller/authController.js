@@ -2,10 +2,23 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
+// ✅ Generate JWT Token (Ensures _id & Role are Included)
+const generateToken = (user) => {
+  return jwt.sign(
+    { _id: user._id, role: user.role }, // Ensure correct field names
+    process.env.JWT_SECRET,
+    { expiresIn: "1d" }
+  );
+};
+
 // ✅ Signup Controller (Forces Role to Always Be "User")
 const signup = async (req, res) => {
   try {
     const { name, email, password } = req.body; // 🚨 "role" is NOT accepted in the request
+
+    if (!name || !email || !password) {
+      return res.status(400).json({ msg: "All fields are required" });
+    }
 
     let user = await User.findOne({ email });
     if (user) return res.status(400).json({ msg: "User already exists" });
@@ -23,24 +36,22 @@ const signup = async (req, res) => {
 
     await user.save();
 
-    // ✅ Include role in JWT token
-    const token = jwt.sign(
-      { id: user._id, role: "user" }, // ✅ Explicitly set role in token
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    );
+    // ✅ Generate Token with Correct Role
+    const token = generateToken(user);
 
     // ✅ Ensure role is included in response
-    res.json({
+    res.status(201).json({
+      message: "User registered successfully",
       token,
       user: {
-        id: user._id,
+        _id: user._id,
         name: user.name,
         email: user.email,
-        role: "user",
+        role: user.role,
       },
     });
   } catch (err) {
+    console.error("❌ Signup Error:", err.message);
     res.status(500).json({ msg: "Server error", error: err.message });
   }
 };
@@ -59,7 +70,7 @@ const login = async (req, res) => {
     let user = await User.findOne({ email });
     if (!user) {
       console.log("❌ User not found");
-      return res.status(400).json({ msg: "User not found" });
+      return res.status(400).json({ msg: "Invalid credentials" });
     }
 
     console.log("✅ User Found:", user);
@@ -77,23 +88,19 @@ const login = async (req, res) => {
       throw new Error("JWT_SECRET is not defined in .env file");
     }
 
-    // ✅ Ensure role is included in the JWT token
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    );
-
+    // ✅ Generate JWT Token with Role
+    const token = generateToken(user);
     console.log("✅ Token Generated:", token);
 
     // ✅ Include role in the response
     res.json({
+      message: "Login successful",
       token,
       user: {
-        id: user._id,
+        _id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role, // ✅ Now properly included in response
+        role: user.role,
       },
     });
   } catch (err) {

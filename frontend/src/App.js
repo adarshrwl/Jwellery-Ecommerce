@@ -5,7 +5,8 @@ import Navbar from "./common/navbar/navbar";
 import HomePage from "./components/homepage/homepage";
 import AdminAddProduct from "./components/admin/AdminAddProduct/AdminAddProduct";
 import AdminProductPage from "./components/admin/AdminViewAllProduts/AdminProductPage";
-import { Categories } from "./components/categories/Categories";
+import { Categories } from "./components/categories/categories.jsx";
+import Cart from './components/cart/Cart.jsx'
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/adminAddProduct" element={<AdminAddProduct />} />
         <Route path="/editProduct" element={<AdminProductPage />} />
         <Route path="/categories" element={<Categories />} />
+        <Route path="/cart" element={< Cart/>} />
       </Routes>
     </Router>
   );
