@@ -6,7 +6,8 @@ import HomePage from "./components/homepage/homepage";
 import AdminAddProduct from "./components/admin/AdminAddProduct/AdminAddProduct";
 import AdminProductPage from "./components/admin/AdminViewAllProduts/AdminProductPage";
 import { Categories } from "./components/categories/categories.jsx";
-import Cart from './components/cart/Cart.jsx'
+import Cart from "./components/cart/Cart.jsx";
+import KhaltiPayment from "./components/KhaltiPayment/KhaltiPayment.jsx";
 
 function App() {
   return (
@@ -20,7 +21,8 @@ function App() {
         <Route path="/adminAddProduct" element={<AdminAddProduct />} />
         <Route path="/editProduct" element={<AdminProductPage />} />
         <Route path="/categories" element={<Categories />} />
-        <Route path="/cart" element={< Cart/>} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/payment" element={<KhaltiPayment />} />
       </Routes>
     </Router>
   );
