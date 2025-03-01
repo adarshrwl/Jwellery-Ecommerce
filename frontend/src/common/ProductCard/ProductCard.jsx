@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import "./ProductCard.css";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 import axios from "axios";
+import "./ProductCard.css";
 
 const ProductCard = ({ product }) => {
   const [message, setMessage] = useState("");
+  const navigate = useNavigate(); // Hook for navigation
 
   // Prepend the backend URL to the image path
   const imageUrl = product.image.startsWith("http")
@@ -19,7 +21,7 @@ const ProductCard = ({ product }) => {
       return;
     }
 
-    console.log("✅ Token being sent:", token); // Debugging token
+    console.log("✅ Token being sent:", token);
 
     try {
       const response = await axios.post(
@@ -48,23 +50,45 @@ const ProductCard = ({ product }) => {
     setTimeout(() => setMessage(""), 3000);
   };
 
+  const handleViewDetails = () => {
+    navigate(`/products/${product._id}`); // Navigate to product description page
+  };
+
   return (
     <div className="product-card">
-      <div className="product-image">
-        <img src={imageUrl} alt={product.name} />
+      <div className="product-image-container">
+        <img
+          src={imageUrl}
+          alt={product.name}
+          onError={(e) => {
+            e.target.src =
+              "https://via.placeholder.com/300x300?text=Image+Not+Found";
+          }}
+        />
       </div>
       <div className="product-info">
-        <h5 className="product-title">{product.name}</h5>
-        <p className="product-description">{product.description}</p>
-        <p className="product-price">${product.price}</p>
+        <div className="product-details">
+          <span className="product-title">{product.name}</span>
+          <span className="product-price">Rs. {product.price.toFixed(2)}</span>
+        </div>
+        <div className="product-actions">
+          <button className="btn view-btn" onClick={handleViewDetails}>
+            View Details
+          </button>
+          <button className="btn cart-btn" onClick={handleAddToCart}>
+            Add to Cart
+          </button>
+        </div>
       </div>
-      <div className="product-actions">
-        <button className="btn view-btn">View Details</button>
-        <button className="btn cart-btn" onClick={handleAddToCart}>
-          Add to Cart
-        </button>
-      </div>
-      {message && <p className="cart-message">{message}</p>}
+      {message && (
+        <p
+          className={`cart-message ${
+            message.includes("successfully") ? "success" : "error"
+          }`}
+        >
+          {message}
+        </p>
+      )}
     </div>
   );
 };

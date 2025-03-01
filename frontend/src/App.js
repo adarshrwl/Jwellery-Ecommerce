@@ -8,6 +8,7 @@ import AdminProductPage from "./components/admin/AdminViewAllProduts/AdminProduc
 import { Categories } from "./components/categories/categories.jsx";
 import Cart from "./components/cart/Cart.jsx";
 import KhaltiPayment from "./components/KhaltiPayment/KhaltiPayment.jsx";
+import ProductDescription from "./components/ProductDescription/ProductDescription.jsx";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/categories" element={<Categories />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/payment" element={<KhaltiPayment />} />
+        <Route path="/products/:id" element={<ProductDescription />} />
       </Routes>
     </Router>
   );

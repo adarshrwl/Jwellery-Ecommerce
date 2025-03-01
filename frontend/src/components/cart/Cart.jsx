@@ -1,13 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
-import {
-  Button,
-  Card,
-  Col,
-  Container,
-  Form,
-  InputGroup,
-  Row,
-} from "react-bootstrap";
+import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -96,13 +88,12 @@ QtyField.propTypes = {
   value: PropTypes.any,
 };
 
-const ProductItem = ({ item, index, onChange, removeItem }) => {
+const ProductItem = ({ item, index, onChange, removeItem, isLast }) => {
   const baseUrl = "http://localhost:5000";
   const imageUrl = item.image.startsWith("http")
     ? item.image
     : `${baseUrl}${item.image}`;
 
-  // Extract productId as a string reliably
   const productId = item.product?._id
     ? item.product._id.toString()
     : item.product && item.product.$oid
@@ -110,46 +101,49 @@ const ProductItem = ({ item, index, onChange, removeItem }) => {
     : item.product?.toString() || "";
 
   return (
-    <Card.Body className="d-flex align-items-center p-4 border-bottom border-dark">
-      <div className="ezy__epcart4-image me-4">
-        <img
-          src={imageUrl}
-          alt={item.name}
-          className="img-fluid rounded shadow-sm"
-          style={{ maxWidth: "130px", height: "auto" }}
-          onError={(e) => {
-            e.target.src =
-              "https://via.placeholder.com/130?text=Image+Not+Found";
-          }}
-        />
-      </div>
-      <div className="flex-grow-1 text-light">
-        <div className="ezy__epcart4-heading mb-2">
-          <a href="#!" className="fs-5 fw-medium text-white">
-            {item.name}
-          </a>
-        </div>
-        <div className="d-flex align-items-center">
-          <h3 className="ezy__epcart4-price mb-0 fw-bold text-warning me-2">
-            Rs. {item.price}
-          </h3>
-          <QtyField
-            name={`ezy__epcart4-qty-${index}`}
-            value={item.quantity}
-            onChange={(e) => onChange(e, index)}
+    <Fragment>
+      <Card.Body className="d-flex align-items-center p-4 ezy__epcart4-item">
+        <div className="ezy__epcart4-image me-4">
+          <img
+            src={imageUrl}
+            alt={item.name}
+            className="img-fluid rounded shadow-sm"
+            style={{ maxWidth: "130px", height: "auto" }}
+            onError={(e) => {
+              e.target.src =
+                "https://via.placeholder.com/130?text=Image+Not+Found";
+            }}
           />
         </div>
-      </div>
-      <div className="ms-3">
-        <Button
-          variant=""
-          className="ezy__epcart4-del rounded-circle p-2 shadow-sm"
-          onClick={() => removeItem(productId)}
-        >
-          <FontAwesomeIcon icon={faTimes} className="fs-5 text-danger" />
-        </Button>
-      </div>
-    </Card.Body>
+        <div className="flex-grow-1 text-light">
+          <div className="ezy__epcart4-heading mb-2">
+            <a href="#!" className="fs-5 fw-medium text-white">
+              {item.name}
+            </a>
+          </div>
+          <div className="d-flex align-items-center">
+            <h3 className="ezy__epcart4-price mb-0 fw-bold text-warning me-3">
+              Rs. {item.price}
+            </h3>
+            <QtyField
+              name={`ezy__epcart4-qty-${index}`}
+              value={item.quantity}
+              onChange={(e) => onChange(e, index)}
+            />
+          </div>
+        </div>
+        <div className="ms-3">
+          <Button
+            variant=""
+            className="ezy__epcart4-del rounded-circle p-2 shadow-sm"
+            onClick={() => removeItem(productId)}
+          >
+            <FontAwesomeIcon icon={faTimes} className="fs-5 text-danger" />
+          </Button>
+        </div>
+      </Card.Body>
+      {!isLast && <hr className="ezy__epcart4-item-separator" />}
+    </Fragment>
   );
 };
 
@@ -158,6 +152,7 @@ ProductItem.propTypes = {
   index: PropTypes.number.isRequired,
   onChange: PropTypes.func.isRequired,
   removeItem: PropTypes.func.isRequired,
+  isLast: PropTypes.bool.isRequired,
 };
 
 const Cart = () => {
@@ -256,22 +251,26 @@ const Cart = () => {
           Your Cart
         </h2>
         {loading ? (
-          <p className="text-center text-muted">Loading cart...</p>
+          <p className="text-center text-muted animate__fadeIn">
+            Loading cart...
+          </p>
         ) : cart.length === 0 ? (
-          <p className="text-center text-muted fs-4">Your cart is empty.</p>
+          <p className="text-center text-muted fs-4 animate__fadeIn">
+            Your cart is empty.
+          </p>
         ) : (
           <Row>
             <Col lg={8}>
               <Card className="ezy__epcart4-card mb-4 shadow-lg">
                 {cart.map((item, i) => (
-                  <Fragment key={i}>
-                    <ProductItem
-                      item={item}
-                      index={i}
-                      onChange={onChange}
-                      removeItem={removeItem}
-                    />
-                  </Fragment>
+                  <ProductItem
+                    key={i}
+                    item={item}
+                    index={i}
+                    onChange={onChange}
+                    removeItem={removeItem}
+                    isLast={i === cart.length - 1} // Pass isLast to omit separator on last item
+                  />
                 ))}
               </Card>
             </Col>
@@ -282,11 +281,11 @@ const Cart = () => {
         )}
         {message && (
           <p
-            className={
+            className={`text-center mt-3 animate__fadeIn ${
               message.includes("successfully")
-                ? "success-message text-center"
-                : "error-message text-center"
-            }
+                ? "success-message"
+                : "error-message"
+            }`}
           >
             {message}
           </p>
