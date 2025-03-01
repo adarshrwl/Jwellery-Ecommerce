@@ -102,8 +102,12 @@ const ProductItem = ({ item, index, onChange, removeItem }) => {
     ? item.image
     : `${baseUrl}${item.image}`;
 
-  // Ensure item.product is a string (ObjectId as a string)
-  const productId = item.product?.toString() || "";
+  // Extract productId as a string reliably
+  const productId = item.product?._id
+    ? item.product._id.toString()
+    : item.product && item.product.$oid
+    ? item.product.$oid
+    : item.product?.toString() || "";
 
   return (
     <Card.Body className="d-flex align-items-center p-4 border-bottom border-dark">
@@ -140,7 +144,7 @@ const ProductItem = ({ item, index, onChange, removeItem }) => {
         <Button
           variant=""
           className="ezy__epcart4-del rounded-circle p-2 shadow-sm"
-          onClick={() => removeItem(productId)} // Use the stringified productId
+          onClick={() => removeItem(productId)}
         >
           <FontAwesomeIcon icon={faTimes} className="fs-5 text-danger" />
         </Button>
@@ -159,7 +163,7 @@ ProductItem.propTypes = {
 const Cart = () => {
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState(""); // Add state for success/error messages
+  const [message, setMessage] = useState("");
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -193,17 +197,23 @@ const Cart = () => {
     updatedCart[index].quantity = Number(value);
     setCart(updatedCart);
 
+    const productId = cart[index].product?._id
+      ? cart[index].product._id.toString()
+      : cart[index].product && cart[index].product.$oid
+      ? cart[index].product.$oid
+      : cart[index].product?.toString() || "";
+
     try {
       await axios.put(
         "http://localhost:5000/api/cart",
         {
-          productId: cart[index].product.toString(), // Ensure productId is a string
+          productId,
           quantity: Number(value),
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setMessage("Cart updated successfully!");
-      setTimeout(() => setMessage(""), 3000); // Clear message after 3 seconds
+      setTimeout(() => setMessage(""), 3000);
     } catch (error) {
       console.error(
         "Error updating cart:",
@@ -218,9 +228,18 @@ const Cart = () => {
       await axios.delete(`http://localhost:5000/api/cart/${productId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setCart(cart.filter((item) => item.product.toString() !== productId));
+      setCart(
+        cart.filter(
+          (item) =>
+            (item.product?._id
+              ? item.product._id.toString()
+              : item.product && item.product.$oid
+              ? item.product.$oid
+              : item.product?.toString() || "") !== productId
+        )
+      );
       setMessage("Item removed from cart successfully!");
-      setTimeout(() => setMessage(""), 3000); // Clear message after 3 seconds
+      setTimeout(() => setMessage(""), 3000);
     } catch (error) {
       console.error(
         "Error removing item from cart:",
