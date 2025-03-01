@@ -102,6 +102,9 @@ const ProductItem = ({ item, index, onChange, removeItem }) => {
     ? item.image
     : `${baseUrl}${item.image}`;
 
+  // Ensure item.product is a string (ObjectId as a string)
+  const productId = item.product?.toString() || "";
+
   return (
     <Card.Body className="d-flex align-items-center p-4 border-bottom border-dark">
       <div className="ezy__epcart4-image me-4">
@@ -137,7 +140,7 @@ const ProductItem = ({ item, index, onChange, removeItem }) => {
         <Button
           variant=""
           className="ezy__epcart4-del rounded-circle p-2 shadow-sm"
-          onClick={() => removeItem(item.product)}
+          onClick={() => removeItem(productId)} // Use the stringified productId
         >
           <FontAwesomeIcon icon={faTimes} className="fs-5 text-danger" />
         </Button>
@@ -156,6 +159,7 @@ ProductItem.propTypes = {
 const Cart = () => {
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState(""); // Add state for success/error messages
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -175,6 +179,7 @@ const Cart = () => {
           "Error fetching cart:",
           error.response?.data || error.message
         );
+        setMessage("Error fetching cart. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -192,16 +197,19 @@ const Cart = () => {
       await axios.put(
         "http://localhost:5000/api/cart",
         {
-          productId: cart[index].product,
+          productId: cart[index].product.toString(), // Ensure productId is a string
           quantity: Number(value),
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      setMessage("Cart updated successfully!");
+      setTimeout(() => setMessage(""), 3000); // Clear message after 3 seconds
     } catch (error) {
       console.error(
         "Error updating cart:",
         error.response?.data || error.message
       );
+      setMessage("Error updating cart. Please try again.");
     }
   };
 
@@ -210,12 +218,15 @@ const Cart = () => {
       await axios.delete(`http://localhost:5000/api/cart/${productId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setCart(cart.filter((item) => item.product !== productId));
+      setCart(cart.filter((item) => item.product.toString() !== productId));
+      setMessage("Item removed from cart successfully!");
+      setTimeout(() => setMessage(""), 3000); // Clear message after 3 seconds
     } catch (error) {
       console.error(
         "Error removing item from cart:",
         error.response?.data || error.message
       );
+      setMessage("Error removing item from cart. Please try again.");
     }
   };
 
@@ -249,6 +260,17 @@ const Cart = () => {
               <SideBar cart={cart} />
             </Col>
           </Row>
+        )}
+        {message && (
+          <p
+            className={
+              message.includes("successfully")
+                ? "success-message text-center"
+                : "error-message text-center"
+            }
+          >
+            {message}
+          </p>
         )}
       </Container>
     </section>
