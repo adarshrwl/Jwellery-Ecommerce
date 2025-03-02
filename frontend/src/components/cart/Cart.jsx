@@ -16,6 +16,7 @@ const SideBar = ({ cart }) => {
 
   // When the Buy Now button is clicked, redirect to the payment page with the total amount in the query string
   const handleBuyNow = () => {
+    localStorage.setItem("orderData", JSON.stringify(cart));
     // Format the total to two decimals and pass as a query param
     window.location.href = `/payment?amount=${total.toFixed(2)}`;
   };

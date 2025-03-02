@@ -28,7 +28,7 @@ function App() {
         <Route path="/payment" element={<PaymentDemo />} />
         <Route path="/products/:id" element={<ProductDescription />} />
         <Route path="/top-rated" element={<TopRatedProducts />} />
-        {/* <Route path="/payment-success" element={<PaymentSuccess />} /> */}
+        <Route path="/payment-success" element={<PaymentSuccess />} />
       </Routes>
     </Router>
   );
