@@ -7,9 +7,10 @@ import AdminAddProduct from "./components/admin/AdminAddProduct/AdminAddProduct"
 import AdminProductPage from "./components/admin/AdminViewAllProduts/AdminProductPage";
 import { Categories } from "./components/categories/categories.jsx";
 import Cart from "./components/cart/Cart.jsx";
-import KhaltiPayment from "./components/KhaltiPayment/KhaltiPayment.jsx";
+import KhaltiPayment from "./components/KhaltiPayment/PaymentDemo.jsx";
 import ProductDescription from "./components/ProductDescription/ProductDescription.jsx";
 import TopRatedProducts from "./components/topRated/topRatedProducts.jsx";
+import PaymentDemo from "./components/KhaltiPayment/PaymentDemo.jsx";
 
 function App() {
   return (
@@ -24,7 +25,7 @@ function App() {
         <Route path="/editProduct" element={<AdminProductPage />} />
         <Route path="/categories" element={<Categories />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/payment" element={<KhaltiPayment />} />
+        <Route path="/payment" element={<PaymentDemo />} />
         <Route path="/products/:id" element={<ProductDescription />} />
         <Route path="/top-rated" element={<TopRatedProducts />} />
       </Routes>

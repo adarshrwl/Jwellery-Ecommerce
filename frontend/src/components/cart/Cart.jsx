@@ -14,6 +14,12 @@ const SideBar = ({ cart }) => {
   const shippingFee = 209;
   const total = subtotal + shippingFee;
 
+  // When the Buy Now button is clicked, redirect to the payment page with the total amount in the query string
+  const handleBuyNow = () => {
+    // Format the total to two decimals and pass as a query param
+    window.location.href = `/payment?amount=${total.toFixed(2)}`;
+  };
+
   return (
     <Card className="ezy__epcart4-card sticky-top shadow-lg">
       <Card.Body className="p-4">
@@ -36,7 +42,10 @@ const SideBar = ({ cart }) => {
         </div>
       </Card.Body>
       <Card.Body className="p-4 pt-0">
-        <Button className="ezy__epcart4-btn w-100 rounded-pill shadow-sm">
+        <Button
+          onClick={handleBuyNow}
+          className="ezy__epcart4-btn w-100 rounded-pill shadow-sm"
+        >
           Buy Now ({cart.length})
         </Button>
       </Card.Body>
@@ -167,7 +176,6 @@ const Cart = () => {
         setLoading(false);
         return;
       }
-
       try {
         const { data } = await axios.get("http://localhost:5000/api/cart", {
           headers: { Authorization: `Bearer ${token}` },
@@ -269,7 +277,7 @@ const Cart = () => {
                     index={i}
                     onChange={onChange}
                     removeItem={removeItem}
-                    isLast={i === cart.length - 1} // Pass isLast to omit separator on last item
+                    isLast={i === cart.length - 1}
                   />
                 ))}
               </Card>
