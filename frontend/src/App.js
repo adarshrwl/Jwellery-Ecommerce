@@ -7,10 +7,10 @@ import AdminAddProduct from "./components/admin/AdminAddProduct/AdminAddProduct"
 import AdminProductPage from "./components/admin/AdminViewAllProduts/AdminProductPage";
 import { Categories } from "./components/categories/categories.jsx";
 import Cart from "./components/cart/Cart.jsx";
-import KhaltiPayment from "./components/KhaltiPayment/PaymentDemo.jsx";
 import ProductDescription from "./components/ProductDescription/ProductDescription.jsx";
 import TopRatedProducts from "./components/topRated/topRatedProducts.jsx";
-import PaymentDemo from "./components/KhaltiPayment/PaymentDemo.jsx";
+import PaymentDemo from "./components/Payment/PaymentDemo.jsx";
+import PaymentSuccess from "./components/PaymentSuccess/PaymentSuccess.jsx";
 
 function App() {
   return (
@@ -28,6 +28,7 @@ function App() {
         <Route path="/payment" element={<PaymentDemo />} />
         <Route path="/products/:id" element={<ProductDescription />} />
         <Route path="/top-rated" element={<TopRatedProducts />} />
+        {/* <Route path="/payment-success" element={<PaymentSuccess />} /> */}
       </Routes>
     </Router>
   );
