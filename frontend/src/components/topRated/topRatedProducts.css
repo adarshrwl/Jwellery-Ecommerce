@@ -1,0 +1,20 @@
+.ezy__top-rated {
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.ezy__top-rated .row {
+  margin: 0 auto;
+  max-width: 1400px;
+}
+
+.ezy__top-rated .col {
+  display: flex;
+  justify-content: center;
+}
+
+h2 {
+  color: #2c3e50;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+}

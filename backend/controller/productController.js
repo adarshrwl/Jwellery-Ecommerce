@@ -119,16 +119,66 @@ const updateProduct = async (req, res) => {
     product.image = image;
 
     const updatedProduct = await product.save();
-    res
-      .status(200)
-      .json({
-        message: "Product updated successfully",
-        product: updatedProduct,
-      });
+    res.status(200).json({
+      message: "Product updated successfully",
+      product: updatedProduct,
+    });
   } catch (error) {
     res
       .status(500)
       .json({ message: "Error updating product", error: error.message });
+  }
+};
+const addReview = async (req, res) => {
+  try {
+    const { rating, comment } = req.body;
+    const productId = req.params.id;
+    const userId = req.user._id; // Assuming req.user is set by authMiddleware
+
+    if (!rating || !comment) {
+      return res
+        .status(400)
+        .json({ message: "Rating and comment are required" });
+    }
+
+    if (rating < 1 || rating > 5) {
+      return res
+        .status(400)
+        .json({ message: "Rating must be between 1 and 5" });
+    }
+
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // Check if user has already reviewed this product
+    const existingReview = product.reviews.find(
+      (review) => review.user.toString() === userId.toString()
+    );
+    if (existingReview) {
+      return res
+        .status(400)
+        .json({ message: "You have already reviewed this product" });
+    }
+
+    // Add new review
+    product.reviews.push({ user: userId, rating, comment });
+
+    // Calculate new average rating
+    const totalRatings = product.reviews.length;
+    const sumRatings = product.reviews.reduce(
+      (sum, review) => sum + review.rating,
+      0
+    );
+    product.averageRating = totalRatings > 0 ? sumRatings / totalRatings : 0;
+
+    await product.save();
+    res.status(201).json({ message: "Review added successfully", product });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error adding review", error: error.message });
   }
 };
 
@@ -138,4 +188,5 @@ module.exports = {
   getProductById,
   deleteProduct,
   updateProduct,
+  addReview,
 };

@@ -5,6 +5,7 @@ const {
   getProductById,
   deleteProduct,
   updateProduct,
+  addReview,
 } = require("../controller/productController");
 
 const { protect, adminOnly } = require("../middleware/authMiddleware");
@@ -26,5 +27,6 @@ router.delete("/:id", protect, adminOnly, deleteProduct);
 
 // ✅ Admin: Update a product
 router.put("/:id", protect, adminOnly, upload.single("image"), updateProduct);
+router.post("/:id/reviews", protect, addReview);
 
 module.exports = router;

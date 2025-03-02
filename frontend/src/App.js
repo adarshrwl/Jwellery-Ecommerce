@@ -9,6 +9,7 @@ import { Categories } from "./components/categories/categories.jsx";
 import Cart from "./components/cart/Cart.jsx";
 import KhaltiPayment from "./components/KhaltiPayment/KhaltiPayment.jsx";
 import ProductDescription from "./components/ProductDescription/ProductDescription.jsx";
+import TopRatedProducts from "./components/topRated/topRatedProducts.jsx";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/payment" element={<KhaltiPayment />} />
         <Route path="/products/:id" element={<ProductDescription />} />
+        <Route path="/top-rated" element={<TopRatedProducts />} />
       </Routes>
     </Router>
   );
