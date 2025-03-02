@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Button, Card, Container, Row, Col } from "react-bootstrap";
+import { Button, Container, Row, Col, Spinner } from "react-bootstrap";
 import { motion } from "framer-motion";
+import ProductCard from "../../common/ProductCard/ProductCard"; // Your ProductCard
 import "./HomePage.css";
 
 const HomePage = () => {
@@ -29,15 +30,26 @@ const HomePage = () => {
   }, []);
 
   if (loading) {
-    return <div className="text-center py-5">Loading...</div>;
+    return (
+      <div className="text-center py-5 ezy__loading">
+        <Spinner animation="border" role="status" className="ezy__spinner">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+        <p className="mt-2 ezy__loading-text">Loading featured earrings...</p>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="text-center py-5 text-danger">Error: {error}</div>;
+    return (
+      <div className="text-center py-5 text-danger ezy__error">
+        Error: {error}
+      </div>
+    );
   }
 
   return (
-    <div className="bg-light text-dark">
+    <div className="ezy__homepage">
       {/* Hero Section */}
       <div
         className="position-relative text-center text-white d-flex flex-column justify-content-center align-items-center"
@@ -77,28 +89,25 @@ const HomePage = () => {
       </div>
 
       {/* Featured Products Section */}
-      <Container className="py-5">
-        <h2 className="text-center mb-4 fw-bold">Featured Earrings</h2>
-        <Row className="g-4">
+      <Container
+        fluid
+        className="py-3 ezy__featured-section"
+        style={{ padding: "0 15px" }}
+      >
+        <h2 className="text-center mb-3 fw-bold ezy__section-title">
+          Featured Earrings
+        </h2>
+        <Row className="g-3 ezy__product-grid" style={{ margin: 0 }}>
           {featuredEarrings.map((earring) => (
-            <Col key={earring._id} xs={12} sm={6} md={4} lg={3}>
-              <Card className="shadow-sm border-0">
-                <Card.Img
-                  variant="top"
-                  src={`http://localhost:5000${earring.image}`} // Prepend backend URL to image path
-                  alt={earring.name}
-                  style={{ height: "250px", objectFit: "cover" }}
-                />
-                <Card.Body className="text-center">
-                  <Card.Title className="fw-semibold">
-                    {earring.name}
-                  </Card.Title>
-                  <Card.Text className="text-muted">${earring.price}</Card.Text>
-                  <Button variant="dark" className="rounded-pill w-100">
-                    Add to Cart
-                  </Button>
-                </Card.Body>
-              </Card>
+            <Col
+              key={earring._id}
+              xs={12}
+              sm={6}
+              md={4}
+              lg={3}
+              className="px-2"
+            >
+              <ProductCard product={earring} />
             </Col>
           ))}
         </Row>

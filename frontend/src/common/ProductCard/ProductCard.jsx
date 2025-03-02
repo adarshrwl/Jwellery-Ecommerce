@@ -1,16 +1,25 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./ProductCard.css";
 
 const ProductCard = ({ product }) => {
   const [message, setMessage] = useState("");
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
 
   // Prepend the backend URL to the image path
   const imageUrl = product.image.startsWith("http")
     ? product.image
     : `http://localhost:5000${product.image}`;
+
+  // Calculate average rating
+  const averageRating =
+    product.reviews && product.reviews.length > 0
+      ? (
+          product.reviews.reduce((sum, review) => sum + review.rating, 0) /
+          product.reviews.length
+        ).toFixed(1)
+      : "N/A";
 
   const handleAddToCart = async () => {
     const token = localStorage.getItem("token");
@@ -51,7 +60,7 @@ const ProductCard = ({ product }) => {
   };
 
   const handleViewDetails = () => {
-    navigate(`/products/${product._id}`); // Navigate to product description page
+    navigate(`/products/${product._id}`);
   };
 
   return (
@@ -70,6 +79,11 @@ const ProductCard = ({ product }) => {
         <div className="product-details">
           <span className="product-title">{product.name}</span>
           <span className="product-price">Rs. {product.price.toFixed(2)}</span>
+        </div>
+        <div className="product-rating">
+          <span>
+            Rating: {averageRating}/5 ({product.reviews?.length || 0} reviews)
+          </span>
         </div>
         <div className="product-actions">
           <button className="btn view-btn" onClick={handleViewDetails}>
